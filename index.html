@@ -1,0 +1,611 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Virtual Memory Simulator</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <i class="fa-solid fa-microchip"></i>
+            <span>MemorySim</span>
+        </div>
+
+        <p class="menu-title">MAIN MENU</p>
+
+        <nav>
+            <a href="#" class="active">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </a>
+
+            <a href="#translator">
+                <i class="fa-solid fa-arrows-left-right"></i>
+                Address Translator
+            </a>
+
+            <a href="#page-table">
+                <i class="fa-solid fa-table"></i>
+                Page Table
+            </a>
+
+            <a href="#tlb">
+                <i class="fa-solid fa-bolt"></i>
+                TLB Monitor
+            </a>
+
+            <a href="#memory">
+                <i class="fa-solid fa-memory"></i>
+                Physical Memory
+            </a>
+
+            <a href="#fifo">
+                <i class="fa-solid fa-rotate"></i>
+                FIFO Replacement
+            </a>
+
+            <a href="#history">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                History
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <i class="fa-solid fa-graduation-cap"></i>
+            COA Simulator Project
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="topbar">
+
+            <div>
+                <h2>Virtual Memory Simulator</h2>
+                <p>Computer Organization & Architecture</p>
+            </div>
+
+            <div class="system-status">
+                <span class="status-dot"></span>
+                System Ready
+            </div>
+
+        </header>
+
+
+        <!-- WELCOME -->
+        <section class="welcome">
+
+            <div>
+                <p class="small-heading">MEMORY MANAGEMENT SYSTEM</p>
+
+                <h1>Virtual Memory & Address Translation</h1>
+
+                <p>
+                    Explore how virtual addresses are translated
+                    into physical addresses using paging and TLB.
+                </p>
+            </div>
+
+            <div class="welcome-icon">
+                <i class="fa-solid fa-microchip"></i>
+            </div>
+
+        </section>
+
+
+        <!-- STATISTICS -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                </div>
+                <p>Total Translations</p>
+                <h2 id="totalTranslations">0</h2>
+                <span>Address requests</span>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <p>TLB Hits</p>
+                <h2 id="totalTlbHits">0</h2>
+                <span>Cached mappings</span>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <p>Page Faults</p>
+                <h2 id="totalPageFaults">0</h2>
+                <span>Pages not in memory</span>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    <i class="fa-solid fa-memory"></i>
+                </div>
+                <p>Memory Frames</p>
+                <h2 id="totalFrames">8</h2>
+                <span>Occupied frames</span>
+            </div>
+
+            <!-- PLAYER SCORE -->
+            <div class="stat-card score-card">
+
+                <div class="stat-icon orange">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+
+                <p>Player Score</p>
+
+                <h2 id="playerScore">0 XP</h2>
+
+                <span id="playerRank">Memory Apprentice</span>
+
+                <div class="streak-display">
+                    <i class="fa-solid fa-fire"></i>
+                    <span>Streak: </span>
+                    <strong id="streakCount">0</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PERFORMANCE METRICS -->
+        <section class="stats-grid performance-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+
+                <p>TLB Hit Ratio</p>
+
+                <h2 id="tlbHitRatio">0%</h2>
+
+                <span>TLB efficiency</span>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+
+                <p>Page Fault Rate</p>
+
+                <h2 id="pageFaultRate">0%</h2>
+
+                <span>Page fault frequency</span>
+            </div>
+
+        </section>
+
+
+        <!-- ADDRESS TRANSLATOR -->
+        <section class="panel" id="translator">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Address Translator</h2>
+                    <p>Enter a virtual address to begin translation.</p>
+                </div>
+
+                <span class="tag">PAGING SYSTEM</span>
+
+            </div>
+
+            <div class="input-area">
+
+                <div class="input-group">
+
+                    <label for="virtualAddress">Virtual Address</label>
+
+                    <input
+                        type="number"
+                        id="virtualAddress"
+                        placeholder="Enter address (e.g. 13)"
+                        min="0"
+                        max="31"
+                    >
+
+                </div>
+
+                <button id="translateBtn" type="button">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Translate Address
+                </button>
+
+                <button id="resetBtn" class="reset-btn" type="button">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Reset Simulator
+                </button>
+
+            </div>
+
+            <div class="translation-result" id="translationResult">
+                <p>Translation Result</p>
+                <h3>Waiting for input...</h3>
+            </div>
+
+        </section>
+
+
+        <!-- PAGE TABLE AND TLB -->
+        <section class="two-column">
+
+            <!-- PAGE TABLE -->
+            <div class="panel" id="page-table">
+
+                <div class="section-heading">
+
+                    <div>
+                        <h2>Page Table</h2>
+                        <p>Virtual page to physical frame mapping</p>
+                    </div>
+
+                    <i class="fa-solid fa-table icon-heading"></i>
+
+                </div>
+
+                <div class="table-container">
+
+                    <table class="data-table">
+
+                        <thead>
+                            <tr>
+                                <th>Virtual Page</th>
+                                <th>Physical Frame</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="pageTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- TLB MONITOR -->
+            <div class="panel" id="tlb">
+
+                <div class="section-heading">
+
+                    <div>
+                        <h2>TLB Monitor</h2>
+                        <p>Translation Lookaside Buffer</p>
+                    </div>
+
+                    <i class="fa-solid fa-bolt icon-heading"></i>
+
+                </div>
+
+                <div class="tlb-summary">
+
+                    <div class="tlb-box">
+                        <p>TLB Hits</p>
+                        <h2 id="tlbHits">0</h2>
+                    </div>
+
+                    <div class="tlb-box">
+                        <p>TLB Misses</p>
+                        <h2 id="tlbMisses">0</h2>
+                    </div>
+
+                </div>
+
+                <div class="table-container">
+
+                    <table class="data-table">
+
+                        <thead>
+                            <tr>
+                                <th>Virtual Page</th>
+                                <th>Physical Frame</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tlbTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PHYSICAL MEMORY -->
+        <section class="panel" id="memory">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Physical Memory</h2>
+                    <p>Visual representation of memory frames</p>
+                </div>
+
+                <span class="tag">RAM</span>
+
+            </div>
+
+            <div class="memory-legend">
+
+                <span>
+                    <i class="fa-solid fa-square" style="color:#34d399;"></i>
+                    Occupied
+                </span>
+
+                <span>
+                    <i class="fa-regular fa-square" style="color:#94a3b8;"></i>
+                    Free
+                </span>
+
+            </div>
+
+            <div class="memory-grid" id="memoryGrid">
+
+                <div class="memory-frame" id="frame-0">Frame 0</div>
+                <div class="memory-frame" id="frame-1">Frame 1</div>
+                <div class="memory-frame" id="frame-2">Frame 2</div>
+                <div class="memory-frame" id="frame-3">Frame 3</div>
+                <div class="memory-frame" id="frame-4">Frame 4</div>
+                <div class="memory-frame" id="frame-5">Frame 5</div>
+                <div class="memory-frame" id="frame-6">Frame 6</div>
+                <div class="memory-frame" id="frame-7">Frame 7</div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FIFO PAGE REPLACEMENT VISUALIZATION -->
+        <section class="panel fifo-panel" id="fifo">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>
+                        <i class="fa-solid fa-rotate"></i>
+                        FIFO Page Replacement
+                    </h2>
+
+                    <p>
+                        First In, First Out — the oldest loaded page
+                        is replaced first.
+                    </p>
+                </div>
+
+                <span class="tag">REPLACEMENT ALGORITHM</span>
+
+            </div>
+
+
+            <!-- FIFO QUEUE -->
+            <div class="fifo-section">
+
+                <h3>
+                    <i class="fa-solid fa-list-ol"></i>
+                    FIFO Queue
+                </h3>
+
+                <p class="fifo-description">
+                    Pages are arranged from oldest to newest.
+                    The first page is the next replacement candidate.
+                </p>
+
+                <div class="fifo-queue" id="fifoQueue">
+
+                    <div class="fifo-empty">
+                        FIFO queue will appear here
+                    </div>
+
+                </div>
+
+            </div>
+
+
+          
+<!-- FIFO PAGE REPLACEMENT SECTION -->
+
+<section class="section-card fifo-section" id="fifo">
+
+    <div class="fifo-header">
+
+        <div class="fifo-heading">
+            <div class="fifo-main-icon">
+                <i class="fa-solid fa-arrows-rotate"></i>
+            </div>
+
+            <div>
+                <h2>FIFO Page Replacement</h2>
+                <p>First In, First Out — the oldest loaded page is replaced first.</p>
+            </div>
+        </div>
+
+        <span class="fifo-algorithm-badge">
+            <i class="fa-solid fa-microchip"></i>
+            REPLACEMENT ALGORITHM
+        </span>
+
+    </div>
+
+
+    <!-- FIFO QUEUE -->
+
+    <div class="fifo-queue-panel">
+
+        <div class="fifo-panel-heading">
+            <div>
+                <h3>FIFO Queue</h3>
+                <p>Pages arranged from oldest to newest</p>
+            </div>
+
+            <span class="fifo-order-label">
+                <i class="fa-solid fa-arrow-right"></i>
+                OLD → NEW
+            </span>
+        </div>
+
+        <div class="fifo-legend">
+            <span><i class="legend-dot victim-dot"></i> Next victim</span>
+            <span><i class="legend-dot normal-dot"></i> In memory</span>
+        </div>
+
+        <div class="fifo-queue" id="fifoQueue"></div>
+
+    </div>
+
+
+    <!-- FIFO METRICS -->
+
+    <div class="fifo-metrics">
+
+        <div class="fifo-metric-card victim-card">
+
+            <div class="fifo-metric-icon">
+                <i class="fa-solid fa-hourglass-half"></i>
+            </div>
+
+            <div class="fifo-metric-info">
+                <span>Next Victim</span>
+                <h2 id="fifoVictim">--</h2>
+                <small>Oldest page in queue</small>
+            </div>
+
+        </div>
+
+
+        <div class="fifo-metric-card removed-card">
+
+            <div class="fifo-metric-icon">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </div>
+
+            <div class="fifo-metric-info">
+                <span>Page Removed</span>
+                <h2 id="fifoRemoved">--</h2>
+                <small>Outgoing page</small>
+            </div>
+
+        </div>
+
+
+        <div class="fifo-metric-card loaded-card">
+
+            <div class="fifo-metric-icon">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            </div>
+
+            <div class="fifo-metric-info">
+                <span>Page Loaded</span>
+                <h2 id="fifoLoaded">--</h2>
+                <small>Incoming page</small>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FIFO STATUS -->
+
+    <div class="fifo-status-panel" id="fifoStatus">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Waiting for a page replacement...</span>
+    </div>
+
+</section>
+
+                
+
+        <!-- TRANSLATION HISTORY -->
+        <section class="panel history-panel" id="history">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Translation History</h2>
+                    <p>Previous address translation records</p>
+                </div>
+
+                <i class="fa-solid fa-clock-rotate-left icon-heading"></i>
+
+            </div>
+
+            <div class="table-container">
+
+                <table class="data-table">
+
+                    <thead>
+                        <tr>
+                            <th>Virtual Address</th>
+                            <th>Page</th>
+                            <th>Offset</th>
+                            <th>Frame</th>
+                            <th>Physical Address</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="translationHistoryBody">
+
+                        <tr>
+                            <td colspan="6" style="text-align:center;">
+                                No translations yet
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer>
+
+            <p>Virtual Memory & Address Translation Simulator</p>
+
+            <p>COA Academic Project | Built with HTML, CSS & JavaScript</p>
+
+        </footer>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="script.js"></script>
+
+</body>
+</html>
