@@ -37,5 +37,7 @@ Page Fault Handling: Detects and highlights Page Faults when a requested page is
    * Using a Browser: Double-click `index.html` directly to open it in Chrome, Edge, or any modern web browser.
 
 Author: 1. Gauri Giri (MCA): 2600520140022
-        2. Shreya Singh (MCA): 2600520140062
+
+Author :2. Shreya Singh (MCA): 2600520140062
+
 COA Project
